@@ -81,7 +81,7 @@ app.post('/user/register', function (req, res) {
       return res.render('index', {errors: "Password and password confirmation do not match"});
   }
   if (req.body.password.length < 1) {
-    err = 'Bad password';
+    var err = 'Bad password';
     res.render('index', {errors: err});
     return;
   }
