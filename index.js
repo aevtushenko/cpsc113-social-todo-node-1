@@ -22,7 +22,7 @@ app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x
 // Configure session middleware that will parse the cookies
 // of an incoming request to see if there is a session for this cookie.
 app.use(session({
-  secret: process.env.SESSION_SECRET,
+  secret: "sdf",
   resave: false,
   saveUninitialized: true,
   cookie: { secure: 'auto' },
@@ -136,6 +136,12 @@ app.get('/user/logout', function(req, res){
     res.redirect('/');
   });
 });
+
+/*app.get('/user/login', function(req, res){
+  req.session.destroy(function(){
+    res.redirect('/');
+  });
+}); */
 
 //  All the controllers and routes below this require
 //  the user to be logged in.
