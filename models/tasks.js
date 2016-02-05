@@ -13,7 +13,7 @@ var TaskSchema = new Schema({
     owner: ObjectId,
     title: stringField,
     description: stringField,
-    isComplete: Boolean,
+    isComplete: {type: Boolean, default: false},
     collaborators: [String]
 });
 

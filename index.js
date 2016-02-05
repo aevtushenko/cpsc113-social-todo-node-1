@@ -137,14 +137,6 @@ app.get('/user/logout', function(req, res){
   });
 });
 
-/*app.get('/user/login', function(req, res){
-  req.session.destroy(function(){
-    res.redirect('/');
-  });
-}); */
-
-//  All the controllers and routes below this require
-//  the user to be logged in.
 app.use(isLoggedIn);
 
 // Handle submission of new task form
@@ -152,7 +144,6 @@ app.post('/task/create', function(req, res){
   var newTask = new Tasks();
   newTask.owner = res.locals.currentUser._id;
   newTask.title = req.body.title;
-  newTask.description = req.body.description;
   newTask.collaborators = [req.body.collaborator1, req.body.collaborator2, req.body.collaborator3];
   newTask.save(function(err, savedTask){
     if(err || !savedTask){
@@ -163,7 +154,84 @@ app.post('/task/create', function(req, res){
   });
 });
 
+/*app.post('/task/delete', function(req, res){
+  
+  Tasks.findOne( {_id: req.body.id}, function(err, task){
+  if (err) {return;}
+  else if (!req.body.owner.equals(res.locals.currentUser._id))
+  {res.send("You do not own this task!")  }
+  else
+  { Tasks.remove ( {_id: req.body.id}, function(err, task)
+  
+  {
+    if (err) {return;}
+    else {res.redirect('/');}
+    
+    
+  });
+    
+  }
+  });
+
+
+}); */
+
+app.post('/task/delete', function(req, res){
+
+  Tasks.findById(req.body.id, function(err, task)
+  { 
+    if(err || !task || req.body.owner!=res.locals.currentUser._id.toString() ){
+      res.send('No such task or you are not the owner!');
+      return;
+    }else{
+      task.owner = null;
+      task.save(function(err, savedTask){
+    if(err || !savedTask){
+      res.send('Error saving task!');
+    }else{
+      res.redirect('/');
+    }
+  });
+        
+      }
+      
+    });
+});
+
+
+
+app.post('/task/complete', function(req, res){
+
+  Tasks.findById(req.body.id, function(err, task)
+  { 
+    if(err || !task){
+      res.send('No such task!');
+      return;
+    }else{
+      task.isComplete = !task.isComplete;
+      task.save(function(err, savedTask){
+    if(err || !savedTask){
+      res.send('Error saving task!');
+    }else{
+      res.redirect('/');
+    }
+  });
+        
+      }
+    });
+});
+
+
+
+
+
 // Start the server
 app.listen(process.env.PORT, function () {
   console.log('Example app listening on port ' + process.env.PORT);
 });
+
+
+
+
+
+
