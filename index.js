@@ -80,8 +80,18 @@ app.post('/user/register', function (req, res) {
   if(req.body.password !== req.body.password_confirmation){
       return res.render('index', {errors: "Password and password confirmation do not match"});
   }
-  if (req.body.password.length < 1) {
+  if (req.body.password.length < 1 || req.body.password.length > 50) {
     var err = 'Bad password';
+    res.render('index', {errors: err});
+    return;
+  }
+  if (req.body.email.length < 1 || req.body.email.length > 50) {
+    var err = 'Bad email';
+    res.render('index', {errors: err});
+    return;
+  }
+  if (req.body.fl_name.length < 1 || req.body.fl_name.length > 50) {
+    var err = 'Bad username';
     res.render('index', {errors: err});
     return;
   }
